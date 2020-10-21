@@ -1,0 +1,37 @@
+{
+    "name": "news-tech-bot",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "dependencies": {
+        "axios": "^0.20.0",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "fs": "0.0.1-security",
+        "mongoose": "^5.10.9",
+        "node-cron": "^2.0.3",
+        "nodemon": "^2.0.5",
+        "puppeteer": "^5.3.1",
+        "telegraf": "^3.38.0",
+        "telegram-node-bot": "^4.0.5"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node ./src/app.js",
+        "nodemon": "nodemon ./src/app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/benits/news-tech-bot.git"
+    },
+    "keywords": [
+        "chatbot"
+    ],
+    "author": "Matheus Benites",
+    "license": "MPL-2.0",
+    "bugs": {
+        "url": "https://github.com/benits/news-tech-bot/issues"
+    },
+    "homepage": "https://github.com/benits/news-tech-bot#readme"
+}
