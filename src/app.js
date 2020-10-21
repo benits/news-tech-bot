@@ -25,10 +25,15 @@ cron.schedule("* * * * *", async () => {
   let listNews = JSON.parse(response.publishedNews);
 
   listNews.forEach((news) => {
-    bot.telegram.sendMessage(
-      "testandotech",
-      `<b>${news.title}</b>\n\n <b>${news.date} - ${news.minutesAgo}</b>\n\n ${news.link}`
-    );
+    try {
+      bot.telegram.sendMessage(
+        -1001467586057,
+        `<b>${news.title}</b>\n\n <b>${news.date} - ${news.minutesAgo}</b>\n\n ${news.link}`,
+        { parse_mode: "HTML" }
+      );
+    } catch (err) {
+      console.error(err);
+    }
   });
 });
 
