@@ -23,7 +23,11 @@ const bot = new Telegraf("1341231475:AAGVzrbuX5oGVAzMT75CXvq1693xgMzpGE0");
 
 cron.schedule("*/5 * * * *", async () => {
   mongoose
-    .connect(mongoURI, { useUnifiedTopology: true, useNewUrlParser: true })
+    .connect(mongoURI, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useFindAndModify: true,
+    })
     .then(() => {
       console.log("MongoDB Connected");
     })
