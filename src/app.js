@@ -1,9 +1,14 @@
 "use strict";
 const webScraping = require("./botNews");
 const data = require("./botNews/data");
-const { pageURL } = data;
+const mongoURI =
+  "mongodb+srv://matheus-benites:news123@cluster0.daveo.mongodb.net/techbot?retryWrites=true&w=majority";
+
+const mongoose = require("mongoose");
 const cron = require("node-cron");
 const express = require("express");
+const compareAndSaveResults = require("./botNews/resultAnalysis");
+const getTop10News = require("./botNews/getFirst5News");
 
 // const Telegram = require("telegram-node-bot");
 // const TelegramBaseController = Telegram.TelegramBaseController;
@@ -16,54 +21,30 @@ const Telegraf = require("telegraf");
 
 const bot = new Telegraf("1341231475:AAGVzrbuX5oGVAzMT75CXvq1693xgMzpGE0");
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("*/5 * * * *", async () => {
+  mongoose
+    .connect(mongoURI, { useUnifiedTopology: true, useNewUrlParser: true })
+    .then(() => {
+      console.log("MongoDB Connected");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   let response = await webScraping();
 
-  console.log("====================================");
-  console.log("enviando");
-  console.log("====================================");
   let listNews = JSON.parse(response.publishedNews);
 
   listNews.forEach((news) => {
-    try {
-      bot.telegram.sendMessage(
-        -1001467586057,
-        `<b>${news.title}</b>\n\n <b>${news.date} - ${news.minutesAgo}</b>\n\n ${news.link}`,
-        { parse_mode: "HTML" }
-      );
-    } catch (err) {
-      console.error(err);
-    }
+    compareAndSaveResults(news, bot);
   });
+
+  await getTop10News(bot);
 });
-
-bot.start((ctx) => ctx.reply("Hello world"));
-
-// class NewsController extends TelegramBaseController {
-//   allNewsAction(scope) {
-//     getNews();
-//     let msg = "!chamou google";
-//     scope.sendMessage(msg);
-//   }
-//   get routes() {
-//     return {
-//       allNews: "allNewsAction",
-//     };
-//   }
-// }
-
-// chatbot.router.when(
-//   new TextCommand("/allnews", "allNews"),
-//   new NewsController()
-// );
 
 bot.command("allnews", async (ctx) => {
   try {
     let response = await webScraping();
 
-    console.log("====================================");
-    console.log(typeof JSON.parse(response.publishedNews));
-    console.log("====================================");
     let listNews = JSON.parse(response.publishedNews);
 
     listNews.forEach((news) => {
